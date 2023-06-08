@@ -1,13 +1,13 @@
-package com.example.api;
+package com.example.accessingdatamysql;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SpringCrudApplication {
+public class AccessingDataMysqlApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SpringCrudApplication.class, args);
+		SpringApplication.run(AccessingDataMysqlApplication.class, args);
 	}
 
 }
