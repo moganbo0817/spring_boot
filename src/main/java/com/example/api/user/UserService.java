@@ -6,6 +6,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.api.exception.UserNotFoundException;
+
 import jakarta.transaction.Transactional;
 
 @Service
@@ -37,7 +39,7 @@ public class UserService {
     		if(user.getPassword() != null) {originalUser.get().setPassword(user.getPassword());};
     		originalUser.get().setModified(new Date());
     	} else {
-    		// Todo
+    		throw new UserNotFoundException(user.getId().toString());
     	}
         return userRepository.save(originalUser.get());
     }
