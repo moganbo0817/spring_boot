@@ -1,0 +1,19 @@
+version: "3.9"
+# ref: https://docs.docker.com/compose/compose-file
+services:
+  db:
+    image: mysql:8.0.29
+    platform: linux/amd64
+    container_name: db
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_USER: mysql
+      MYSQL_PASSWORD: mysql
+      MYSQL_DATABASE: mysql
+    volumes:
+      - db-data:/var/lib/mysql
+      - $PWD/_tools/mysql/conf.d:/etc/mysql/conf.d:cached
+    ports:
+      - "33306:3306"
+volumes:
+  db-data:
