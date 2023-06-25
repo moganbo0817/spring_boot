@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.stereotype.Service;
 
 
@@ -23,7 +24,8 @@ public class MyUserDetailsService implements UserDetailsService {
         try{
             Person person = repository.findByUsername(username).orElseThrow(
                     () -> new UsernameNotFoundException("User not found"));
-            return new User(person.getUsername(), "{noop}"+person.getPassword(), new ArrayList<>());
+            // パスワードはエンコードしないとエラーになる、めんどい
+            return new User(person.getUsername(), PasswordEncoderFactories.createDelegatingPasswordEncoder().encode(person.getPassword()), new ArrayList<>());
         }catch (Exception e) {
             throw new UsernameNotFoundException("ユーザーが見つかりません");
         }

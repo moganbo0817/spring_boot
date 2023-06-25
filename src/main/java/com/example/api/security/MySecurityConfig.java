@@ -18,7 +18,7 @@ public class MySecurityConfig{
 
 		http.authorizeRequests(auth -> {
             //auth.antMatchers("/get").permitAll();
-            auth.antMatchers("/api/login").permitAll(); // "/api/login"はログインURLなので認可は行わない
+            auth.requestMatchers("/api/login").permitAll(); // "/api/login"はログインURLなので認可は行わない
             auth.anyRequest().authenticated();          // 他は全部認可必要
         });
 
