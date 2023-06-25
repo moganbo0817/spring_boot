@@ -1,17 +1,7 @@
 # spring_boot
 
-・hello world
+・security
 
-Spring bootでBackend　APIを作成する際の一番簡単なsample
+DBにパスワードを登録する際は、bcrypt(8)でハッシュ化してるので下記のサイトでハッシュ値を作成して
 
-・mysql_jpa
-
-MySQLとJPAを用いたDB接続処理のsample
-
-・crud
-
-mysql、jpaを用いたCRUD処理
-
-・handling exception
-
-crudの拡張、ユーザーがいない場合等の例外処理を追加
+http://www.tekboy.net/bcrypt-calculator
