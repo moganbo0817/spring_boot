@@ -21,25 +21,25 @@ public class UserController {
     private UserService userService;
 
     @PostMapping(path="/") // ONLY POST Requests
-    public @ResponseBody User addNewUser (@RequestBody User user) {
+    public @ResponseBody UserEntity addNewUser (@RequestBody UserEntity user) {
 	    return userService.postUser(user);
     }
 	
 	@GetMapping(path="/")
-	public @ResponseBody Iterable<User> getAllUsers() {
+	public @ResponseBody Iterable<UserEntity> getAllUsers() {
 	    // This returns a JSON or XML with the users
 	    return userService.getUsers();
     }
 	
 	@GetMapping(path="/{id}")
-	public @ResponseBody Optional<User> getUser(@PathVariable("id") Integer id) {
+	public @ResponseBody Optional<UserEntity> getUser(@PathVariable("id") Integer id) {
 	    // This returns a JSON or XML with the users
 	    // ToDo nullの時の処理
         return userService.getUser(id);
     }
 	
     @PutMapping(path="/{id}") // ONLY PUT Requests
-    public @ResponseBody User updateUser (@PathVariable("id") Integer id, @RequestBody User user) {
+    public @ResponseBody UserEntity updateUser (@PathVariable("id") Integer id, @RequestBody UserEntity user) {
         user.setId(id);
 	    return userService.putUser(user);
     }

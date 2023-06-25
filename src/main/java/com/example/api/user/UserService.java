@@ -3,12 +3,14 @@ package com.example.api.user;
 import java.util.Date;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.api.exception.UserNotFoundException;
 
-import jakarta.transaction.Transactional;
+
 
 @Service
 @Transactional
@@ -16,23 +18,23 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
-    public User postUser(User user) {
+    public UserEntity postUser(UserEntity user) {
    	    user.setCreated(new Date());
    	    user.setModified(new Date());
         userRepository.save(user);
         return userRepository.save(user);
     }
     
-    public Optional<User>  getUser(Integer id) {
+    public Optional<UserEntity>  getUser(Integer id) {
     	return userRepository.findById(id);
     }
 
-    public Iterable<User>  getUsers() {
+    public Iterable<UserEntity>  getUsers() {
     	return userRepository.findAll();
     }
     
-    public User putUser(User user) {
-    	Optional<User> originalUser = userRepository.findById(user.getId());
+    public UserEntity putUser(UserEntity user) {
+    	Optional<UserEntity> originalUser = userRepository.findById(user.getId());
     	if (originalUser.isPresent()) {
     		if(user.getName() != null) {originalUser.get().setName(user.getName());};
     		if(user.getE_mail() != null) {originalUser.get().setE_mail(user.getE_mail());};
