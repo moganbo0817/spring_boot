@@ -20,7 +20,6 @@ public class Person {
     private String password;
     private String email;
     private Integer age;
-    private Boolean enabled;
     private String roles;
 	public long getId() {
 		return id;
@@ -51,12 +50,6 @@ public class Person {
 	}
 	public void setAge(Integer age) {
 		this.age = age;
-	}
-	public Boolean getEnabled() {
-		return enabled;
-	}
-	public void setEnabled(Boolean enabled) {
-		this.enabled = enabled;
 	}
 	public String getRoles() {
 		return roles;

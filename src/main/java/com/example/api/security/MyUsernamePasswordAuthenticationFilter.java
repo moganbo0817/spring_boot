@@ -1,6 +1,7 @@
 package com.example.api.security;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -8,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -16,30 +18,36 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 public class MyUsernamePasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-	private AuthenticationManager authenticationManager2;
 
-    public MyUsernamePasswordAuthenticationFilter(AuthenticationManager authenticationManager) {
-        this.authenticationManager2 = authenticationManager;
+    private AuthenticationManager authenticationManager;
 
-        // "/api/login" の場合に認証を行うよう設定
-        setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/api/login", "POST"));
+    private static final Long EXPIRATION_TIME = 1000L * 60L * 20L;
 
-        // 成功した場合の処理, 今回は取得した person 情報を返しています。
-        this.setAuthenticationSuccessHandler((req, res, ex) -> {
+    public MyUsernamePasswordAuthenticationFilter(AuthenticationManager authenticationManager){
+        this.authenticationManager = authenticationManager;
+        // ログインパスの指定
+        setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/api/login","POST"));
+        // ログイン成功時にtokenを発行してレスポンスにセットする
+        this.setAuthenticationSuccessHandler((req,res,ex) -> {
+            res.setHeader("X-AUTH-TOKEN","hoge");
             res.setStatus(200);
-//            MyUserDetails user = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//            res.getWriter().write((new ObjectMapper()).writeValueAsString(user.getPerson()));
         });
+
+        //ログイン失敗時
+        this.setAuthenticationFailureHandler((req,res,ex) -> {
+            res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        });
+
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
-            // リクエストのデータを LoginForm として取り出す
-            LoginForm principal = new ObjectMapper().readValue(request.getInputStream(), LoginForm.class);
-            // 認証処理を実行する
-            return authenticationManager2.authenticate(
-                    new UsernamePasswordAuthenticationToken(principal.getUsername(), principal.getPassword())
+            // あとで作成するLoginFormクラスを、リクエストのパラメータとマッピングして作成する
+            LoginForm form = new ObjectMapper().readValue(request.getInputStream(),LoginForm.class);
+            // 作成したLoginFormクラスの内容でログインの実行をする
+            return this.authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(form.getUsername(),form.getPassword(),new ArrayList<>())
             );
         } catch (IOException e) {
             throw new RuntimeException(e);

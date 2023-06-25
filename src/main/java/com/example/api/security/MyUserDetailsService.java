@@ -1,11 +1,17 @@
 package com.example.api.security;
 
+import java.util.ArrayList;
+
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
+
+@Service
 public class MyUserDetailsService implements UserDetailsService {
+	
     private final PersonRepository repository;
 
     public MyUserDetailsService(PersonRepository repository) {
@@ -14,8 +20,12 @@ public class MyUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Person person = repository.findByUsername(username).orElseThrow(
-                () -> new UsernameNotFoundException("User not found"));
-        return new User(person.getUsername(), person.getPassword(), null);
+        try{
+            Person person = repository.findByUsername(username).orElseThrow(
+                    () -> new UsernameNotFoundException("User not found"));
+            return new User(person.getUsername(), "{noop}"+person.getPassword(), new ArrayList<>());
+        }catch (Exception e) {
+            throw new UsernameNotFoundException("ユーザーが見つかりません");
+        }
     }
 }
